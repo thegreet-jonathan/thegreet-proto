@@ -3890,6 +3890,7 @@ self.C3_GetObjectRefTable = function () {
 		C3.Plugins.Date.Exps.ToLocaleDateString,
 		C3.Plugins.Date.Exps.ToLocaleTimeString,
 		C3.Plugins.AJAX.Cnds.OnAnyError,
+		C3.Plugins.Json.Exps.Get,
 		C3.Plugins.System.Exps.left,
 		C3.Plugins.Sprite.Acts.LoadURL,
 		C3.Plugins.System.Acts.ResetGlobals
@@ -3955,7 +3956,6 @@ self.C3_JsPropNameTable = [
 	{DEP_BTN_yes: 0},
 	{CLOSE_IMG: 0},
 	{Dictionary: 0},
-	{scan_in: 0},
 	{JSON: 0},
 	{LocalStorage: 0},
 	{AJAX: 0},
@@ -3993,6 +3993,7 @@ self.C3_JsPropNameTable = [
 	{SORT: 0},
 	{OFF: 0},
 	{ajax_result: 0},
+	{scan_in: 0},
 	{qr_label: 0},
 	{qr_result: 0},
 	{VAL_1: 0},
@@ -4227,6 +4228,7 @@ self.C3_ExpressionFuncs = [
 		() => "FWDED",
 		() => "RET_STOP",
 		() => "RET_STOPED",
+		() => 0.5,
 		() => "BACK",
 		() => "BACKED",
 		() => 785,
@@ -4252,7 +4254,7 @@ self.C3_ExpressionFuncs = [
 			return () => (and("Drimm 용기인식이 [b]", v0.GetValue()) + "번\n오류[/b]가 확인되었습니다.\n[b]다시 처음부터 시작합니다.[/b]");
 		},
 		() => "RECOG_DONE",
-		() => "Loading...\nECIS_22_V1.2",
+		() => "Loading...\nECIS_22_V1.3",
 		() => 900,
 		p => {
 			const f0 = p._GetNode(0).GetBoundMethod();

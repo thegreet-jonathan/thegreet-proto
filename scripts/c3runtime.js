@@ -4254,7 +4254,7 @@ self.C3_ExpressionFuncs = [
 			return () => (and("Drimm 용기인식이 [b]", v0.GetValue()) + "번\n오류[/b]가 확인되었습니다.\n[b]다시 처음부터 시작합니다.[/b]");
 		},
 		() => "RECOG_DONE",
-		() => "Loading...\nECIS_22_V1.3",
+		() => "Loading...\nECIS_22_V1.4",
 		() => 900,
 		p => {
 			const f0 = p._GetNode(0).GetBoundMethod();

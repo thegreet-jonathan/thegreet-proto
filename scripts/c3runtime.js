@@ -3806,25 +3806,17 @@ timer)}this._UpdateTickState()}Tick(){const dt=this._runtime.GetDt(this._inst);f
 }
 
 {
-'use strict';{const C3=self.C3;C3.Behaviors.Pin=class PinBehavior extends C3.SDKBehaviorBase{constructor(opts){super(opts)}Release(){super.Release()}}}{const C3=self.C3;C3.Behaviors.Pin.Type=class PinType extends C3.SDKBehaviorTypeBase{constructor(behaviorType){super(behaviorType)}Release(){super.Release()}OnCreate(){}}}
-{const C3=self.C3;C3.Behaviors.Pin.Instance=class PinInstance extends C3.SDKBehaviorInstanceBase{constructor(behInst,properties){super(behInst);this._pinInst=null;this._pinUid=-1;this._mode="";this._propSet=new Set;this._pinDist=0;this._pinAngle=0;this._pinImagePoint=0;this._dx=0;this._dy=0;this._dWidth=0;this._dHeight=0;this._dAngle=0;this._dz=0;this._lastKnownAngle=0;this._destroy=false;if(properties)this._destroy=properties[0];const rt=this._runtime.Dispatcher();this._disposables=new C3.CompositeDisposable(C3.Disposable.From(rt,
-"instancedestroy",e=>this._OnInstanceDestroyed(e.instance)),C3.Disposable.From(rt,"afterload",e=>this._OnAfterLoad()))}Release(){this._pinInst=null;super.Release()}_SetPinInst(inst){if(inst){this._pinInst=inst;this._StartTicking2()}else{this._pinInst=null;this._StopTicking2()}}_Pin(objectClass,mode,propList){if(!objectClass)return;const otherInst=objectClass.GetFirstPicked(this._inst);if(!otherInst)return;this._mode=mode;this._SetPinInst(otherInst);const myWi=this._inst.GetWorldInfo();const otherWi=
-otherInst.GetWorldInfo();if(this._mode==="properties"){const propSet=this._propSet;propSet.clear();for(const p of propList)propSet.add(p);this._dx=myWi.GetX()-otherWi.GetX();this._dy=myWi.GetY()-otherWi.GetY();this._dAngle=myWi.GetAngle()-otherWi.GetAngle();this._lastKnownAngle=myWi.GetAngle();this._dz=myWi.GetZElevation()-otherWi.GetZElevation();if(propSet.has("x")&&propSet.has("y")){this._pinAngle=C3.angleTo(otherWi.GetX(),otherWi.GetY(),myWi.GetX(),myWi.GetY())-otherWi.GetAngle();this._pinDist=
-C3.distanceTo(otherWi.GetX(),otherWi.GetY(),myWi.GetX(),myWi.GetY())}if(propSet.has("width-abs"))this._dWidth=myWi.GetWidth()-otherWi.GetWidth();else if(propSet.has("width-scale"))this._dWidth=myWi.GetWidth()/otherWi.GetWidth();if(propSet.has("height-abs"))this._dHeight=myWi.GetHeight()-otherWi.GetHeight();else if(propSet.has("height-scale"))this._dHeight=myWi.GetHeight()/otherWi.GetHeight()}else this._pinDist=C3.distanceTo(otherWi.GetX(),otherWi.GetY(),myWi.GetX(),myWi.GetY())}SaveToJson(){const propSet=
-this._propSet;const mode=this._mode;const ret={"uid":this._pinInst?this._pinInst.GetUID():-1,"m":mode,"d":this._destroy};if(mode==="rope"||mode==="bar")ret["pd"]=this._pinDist;else if(mode==="properties"){ret["ps"]=[...this._propSet];if(propSet.has("imagepoint"))ret["ip"]=this._pinImagePoint;else if(propSet.has("x")&&propSet.has("y")){ret["pa"]=this._pinAngle;ret["pd"]=this._pinDist}else{if(propSet.has("x"))ret["dx"]=this._dx;if(propSet.has("y"))ret["dy"]=this._dy}if(propSet.has("angle")){ret["da"]=
-this._dAngle;ret["lka"]=this._lastKnownAngle}if(propSet.has("width-abs")||propSet.has("width-scale"))ret["dw"]=this._dWidth;if(propSet.has("height-abs")||propSet.has("height-scale"))ret["dh"]=this._dHeight;if(propSet.has("z"))ret["dz"]=this._dz}return ret}LoadFromJson(o){const mode=o["m"];const propSet=this._propSet;propSet.clear();this._pinUid=o["uid"];if(typeof mode==="number"){this._LoadFromJson_Legacy(o);return}this._mode=mode;if(o.hasOwnProperty("d"))this._destroy=!!o["d"];if(mode==="rope"||
-mode==="bar")this._pinDist=o["pd"];else if(mode==="properties"){for(const p of o["ps"])propSet.add(p);if(propSet.has("imagepoint"))this._pinImagePoint=o["ip"];else if(propSet.has("x")&&propSet.has("y")){this._pinAngle=o["pa"];this._pinDist=o["pd"]}else{if(propSet.has("x"))this._dx=o["dx"];if(propSet.has("y"))this._dy=o["dy"]}if(propSet.has("angle")){this._dAngle=o["da"];this._lastKnownAngle=o["lka"]||0}if(propSet.has("width-abs")||propSet.has("width-scale"))this._dWidth=o["dw"];if(propSet.has("height-abs")||
-propSet.has("height-scale"))this._dHeight=o["dh"];if(propSet.has("z"))this._dz=o["dz"]}}_LoadFromJson_Legacy(o){const propSet=this._propSet;const myStartAngle=o["msa"];const theirStartAngle=o["tsa"];const pinAngle=o["pa"];const pinDist=o["pd"];const mode=o["m"];switch(mode){case 0:this._mode="properties";propSet.add("x").add("y").add("angle");this._pinAngle=pinAngle;this._pinDist=pinDist;this._dAngle=myStartAngle-theirStartAngle;this._lastKnownAngle=o["lka"];break;case 1:this._mode="properties";propSet.add("x").add("y");
-this._pinAngle=pinAngle;this._pinDist=pinDist;break;case 2:this._mode="properties";propSet.add("angle");this._dAngle=myStartAngle-theirStartAngle;this._lastKnownAngle=o["lka"];break;case 3:this._mode="rope";this._pinDist=o["pd"];break;case 4:this._mode="bar";this._pinDist=o["pd"];break}}_OnAfterLoad(){if(this._pinUid===-1)this._SetPinInst(null);else{this._SetPinInst(this._runtime.GetInstanceByUID(this._pinUid));this._pinUid=-1}}_OnInstanceDestroyed(inst){if(this._pinInst===inst){this._SetPinInst(null);
-if(this._destroy)this._runtime.DestroyInstance(this._inst)}}Tick2(){const pinInst=this._pinInst;if(!pinInst)return;const pinWi=pinInst.GetWorldInfo();const myInst=this._inst;const myWi=myInst.GetWorldInfo();const mode=this._mode;let bboxChanged=false;if(mode==="rope"||mode==="bar"){const dist=C3.distanceTo(myWi.GetX(),myWi.GetY(),pinWi.GetX(),pinWi.GetY());if(dist>this._pinDist||mode==="bar"&&dist<this._pinDist){const a=C3.angleTo(pinWi.GetX(),pinWi.GetY(),myWi.GetX(),myWi.GetY());myWi.SetXY(pinWi.GetX()+
-Math.cos(a)*this._pinDist,pinWi.GetY()+Math.sin(a)*this._pinDist);bboxChanged=true}}else{const propSet=this._propSet;let v=0;if(propSet.has("imagepoint")){const [newX,newY]=pinInst.GetImagePoint(this._pinImagePoint);if(!myWi.EqualsXY(newX,newY)){myWi.SetXY(newX,newY);bboxChanged=true}}else if(propSet.has("x")&&propSet.has("y")){const newX=pinWi.GetX()+Math.cos(pinWi.GetAngle()+this._pinAngle)*this._pinDist;const newY=pinWi.GetY()+Math.sin(pinWi.GetAngle()+this._pinAngle)*this._pinDist;if(!myWi.EqualsXY(newX,
-newY)){myWi.SetXY(newX,newY);bboxChanged=true}}else{v=pinWi.GetX()+this._dx;if(propSet.has("x")&&v!==myWi.GetX()){myWi.SetX(v);bboxChanged=true}v=pinWi.GetY()+this._dy;if(propSet.has("y")&&v!==myWi.GetY()){myWi.SetY(v);bboxChanged=true}}if(propSet.has("angle")){if(this._lastKnownAngle!==myWi.GetAngle())this._dAngle=C3.clampAngle(this._dAngle+(myWi.GetAngle()-this._lastKnownAngle));v=C3.clampAngle(pinWi.GetAngle()+this._dAngle);if(v!==myWi.GetAngle()){myWi.SetAngle(v);bboxChanged=true}this._lastKnownAngle=
-myWi.GetAngle()}if(propSet.has("width-abs")){v=pinWi.GetWidth()+this._dWidth;if(v!==myWi.GetWidth()){myWi.SetWidth(v);bboxChanged=true}}if(propSet.has("width-scale")){v=pinWi.GetWidth()*this._dWidth;if(v!==myWi.GetWidth()){myWi.SetWidth(v);bboxChanged=true}}if(propSet.has("height-abs")){v=pinWi.GetHeight()+this._dHeight;if(v!==myWi.GetHeight()){myWi.SetHeight(v);bboxChanged=true}}if(propSet.has("height-scale")){v=pinWi.GetHeight()*this._dHeight;if(v!==myWi.GetHeight()){myWi.SetHeight(v);bboxChanged=
-true}}if(propSet.has("z")){v=pinWi.GetZElevation()+this._dz;if(v!==myWi.GetZElevation()){myWi.SetZElevation(v);this._runtime.UpdateRender()}}}if(bboxChanged)myWi.SetBboxChanged()}GetDebuggerProperties(){const prefix="behaviors.pin.debugger";return[{title:"$"+this.GetBehaviorType().GetName(),properties:[{name:prefix+".is-pinned",value:!!this._pinInst},{name:prefix+".pinned-uid",value:this._pinInst?this._pinInst.GetUID():0}]}]}}}
-{const C3=self.C3;C3.Behaviors.Pin.Cnds={IsPinned(){return!!this._pinInst},WillDestroy(){return this._destroy}}}
-{const C3=self.C3;C3.Behaviors.Pin.Acts={PinByDistance(objectClass,mode){this._Pin(objectClass,mode===0?"rope":"bar")},PinByProperties(objectClass,ex,ey,ea,ew,eh,ez){const propList=[];if(ex)propList.push("x");if(ey)propList.push("y");if(ea)propList.push("angle");if(ez)propList.push("z");if(ew===1)propList.push("width-abs");else if(ew===2)propList.push("width-scale");if(eh===1)propList.push("height-abs");else if(eh===2)propList.push("height-scale");if(propList.length===0)return;this._Pin(objectClass,
-"properties",propList)},PinByImagePoint(objectClass,imgPt,ea,ew,eh,ez){const propList=["imagepoint"];if(ea)propList.push("angle");if(ez)propList.push("z");if(ew===1)propList.push("width-abs");else if(ew===2)propList.push("width-scale");if(eh===1)propList.push("height-abs");else if(eh===2)propList.push("height-scale");this._pinImagePoint=imgPt;this._Pin(objectClass,"properties",propList)},SetPinDistance(d){if(this._mode==="rope"||this._mode==="bar")this._pinDist=Math.max(d,0)},SetDestroy(d){this._destroy=
-d},Unpin(){this._SetPinInst(null);this._mode="";this._propSet.clear();this._pinImagePoint=""},Pin(objectClass,mode){switch(mode){case 0:this._Pin(objectClass,"properties",["x","y","angle"]);break;case 1:this._Pin(objectClass,"properties",["x","y"]);break;case 2:this._Pin(objectClass,"properties",["angle"]);break;case 3:this._Pin(objectClass,"rope");break;case 4:this._Pin(objectClass,"bar");break}}}}{const C3=self.C3;C3.Behaviors.Pin.Exps={PinnedUID(){return this._pinInst?this._pinInst.GetUID():-1}}};
+'use strict';{const C3=self.C3;C3.Behaviors.DragnDrop=class DragnDropBehavior extends C3.SDKBehaviorBase{constructor(opts){super(opts);const rt=this._runtime.Dispatcher();this._disposables=new C3.CompositeDisposable(C3.Disposable.From(rt,"pointerdown",e=>this._OnPointerDown(e.data)),C3.Disposable.From(rt,"pointermove",e=>this._OnPointerMove(e.data)),C3.Disposable.From(rt,"pointerup",e=>this._OnPointerUp(e.data,false)),C3.Disposable.From(rt,"pointercancel",e=>this._OnPointerUp(e.data,true)))}Release(){this._disposables.Release();
+this._disposables=null;super.Release()}_OnPointerDown(e){if(e["pointerType"]==="mouse"&&e["button"]!==0)return;this._OnInputDown(e["pointerId"].toString(),e["pageX"]-this._runtime.GetCanvasClientX(),e["pageY"]-this._runtime.GetCanvasClientY())}_OnPointerMove(e){if((e["lastButtons"]&1)!==0&&(e["buttons"]&1)===0)this._OnInputUp(e["pointerId"].toString());else this._OnInputMove(e["pointerId"].toString(),e["pageX"]-this._runtime.GetCanvasClientX(),e["pageY"]-this._runtime.GetCanvasClientY())}_OnPointerUp(e,
+isCancel){if(e["pointerType"]==="mouse"&&e["button"]!==0)return;this._OnInputUp(e["pointerId"].toString())}async _OnInputDown(src,clientX,clientY){const myInstances=this.GetInstances();let topMost=null;let topBehInst=null;let topX=0;let topY=0;for(const inst of myInstances){const behInst=inst.GetBehaviorSdkInstanceFromCtor(C3.Behaviors.DragnDrop);if(!behInst.IsEnabled()||behInst.IsDragging()||inst.IsDestroyed())continue;const wi=inst.GetWorldInfo();const layer=wi.GetLayer();const [lx,ly]=layer.CanvasCssToLayer(clientX,
+clientY,wi.GetTotalZElevation());if(!layer.IsSelfAndParentsInteractive()||!wi.ContainsPoint(lx,ly))continue;if(!topMost){topMost=inst;topBehInst=behInst;topX=lx;topY=ly;continue}const topWi=topMost.GetWorldInfo();if(layer.GetIndex()>topWi.GetLayer().GetIndex()||layer.GetIndex()===topWi.GetLayer().GetIndex()&&wi.GetZIndex()>topWi.GetZIndex()){topMost=inst;topBehInst=behInst;topX=lx;topY=ly}}if(topMost)await topBehInst._OnDown(src,topX,topY)}_OnInputMove(src,clientX,clientY){const myInstances=this.GetInstances();
+for(const inst of myInstances){const behInst=inst.GetBehaviorSdkInstanceFromCtor(C3.Behaviors.DragnDrop);if(!behInst.IsEnabled()||!behInst.IsDragging()||behInst.IsDragging()&&behInst.GetDragSource()!==src)continue;const wi=inst.GetWorldInfo();const layer=wi.GetLayer();const [lx,ly]=layer.CanvasCssToLayer(clientX,clientY,wi.GetTotalZElevation());behInst._OnMove(lx,ly)}}async _OnInputUp(src){const myInstances=this.GetInstances();for(const inst of myInstances){const behInst=inst.GetBehaviorSdkInstanceFromCtor(C3.Behaviors.DragnDrop);
+if(behInst.IsDragging()&&behInst.GetDragSource()===src)await behInst._OnUp()}}}}{const C3=self.C3;C3.Behaviors.DragnDrop.Type=class DragnDropType extends C3.SDKBehaviorTypeBase{constructor(behaviorType){super(behaviorType)}Release(){super.Release()}OnCreate(){}}}
+{const C3=self.C3;const AXES=0;const ENABLE=1;C3.Behaviors.DragnDrop.Instance=class DragnDropInstance extends C3.SDKBehaviorInstanceBase{constructor(behInst,properties){super(behInst);this._isDragging=false;this._dx=0;this._dy=0;this._dragSource="<none>";this._axes=0;this._isEnabled=true;if(properties){this._axes=properties[AXES];this._isEnabled=properties[ENABLE]}}Release(){super.Release()}SaveToJson(){return{"a":this._axes,"e":this._isEnabled}}LoadFromJson(o){this._axes=o["a"];this._isEnabled=o["e"];
+this._isDragging=false}IsEnabled(){return this._isEnabled}IsDragging(){return this._isDragging}GetDragSource(){return this._dragSource}async _OnDown(src,x,y){const wi=this.GetWorldInfo();this._dx=x-wi.GetX();this._dy=y-wi.GetY();this._isDragging=true;this._dragSource=src;await this.TriggerAsync(C3.Behaviors.DragnDrop.Cnds.OnDragStart)}_OnMove(x,y){const wi=this.GetWorldInfo();const newX=x-this._dx;const newY=y-this._dy;if(this._axes===0){if(wi.GetX()!==newX||wi.GetY()!==newY){wi.SetXY(newX,newY);
+wi.SetBboxChanged()}}else if(this._axes===1){if(wi.GetX()!==newX){wi.SetX(newX);wi.SetBboxChanged()}}else if(this._axes===2)if(wi.GetY()!==newY){wi.SetY(newY);wi.SetBboxChanged()}}async _OnUp(){this._isDragging=false;await this.TriggerAsync(C3.Behaviors.DragnDrop.Cnds.OnDrop)}GetPropertyValueByIndex(index){switch(index){case AXES:return this._axes;case ENABLE:return this._isEnabled}}SetPropertyValueByIndex(index,value){switch(index){case AXES:this._axes=value;break;case ENABLE:this._isEnabled=!!value;
+break}}GetDebuggerProperties(){const prefix="behaviors.dragndrop";return[{title:"$"+this.GetBehaviorType().GetName(),properties:[{name:prefix+".debugger.is-dragging",value:this._isDragging},{name:prefix+".properties.enabled.name",value:this._isEnabled,onedit:v=>this._isEnabled=v}]}]}}}{const C3=self.C3;C3.Behaviors.DragnDrop.Cnds={IsDragging(){return this._isDragging},OnDragStart(){return true},OnDrop(){return true},IsEnabled(){return this._isEnabled}}}
+{const C3=self.C3;C3.Behaviors.DragnDrop.Acts={SetEnabled(e){this._isEnabled=!!e;if(!this._isEnabled)this._isDragging=false},SetAxes(a){this._axes=a},Drop(){if(this._isDragging)this._OnUp()}}}{const C3=self.C3;C3.Behaviors.DragnDrop.Exps={}};
 
 }
 
@@ -3848,7 +3840,7 @@ self.C3_GetObjectRefTable = function () {
 		C3.Plugins.Arr,
 		C3.Plugins.iframe,
 		C3.Plugins.Date,
-		C3.Behaviors.Pin,
+		C3.Behaviors.DragnDrop,
 		C3.Plugins.System.Cnds.IsGroupActive,
 		C3.Plugins.System.Acts.SetLayerVisible,
 		C3.Behaviors.Fade.Acts.StartFade,
@@ -3883,13 +3875,15 @@ self.C3_GetObjectRefTable = function () {
 		C3.Behaviors.Tween.Acts.TweenOneProperty,
 		C3.Plugins.System.Acts.AddVar,
 		C3.Plugins.Text.Acts.SetText,
-		C3.Plugins.LocalStorage.Acts.SetItem,
+		C3.Plugins.Arr.Acts.SetXY,
+		C3.Plugins.Date.Exps.ToLocaleString,
+		C3.Plugins.Date.Exps.Now,
+		C3.Plugins.Dictionary.Acts.AddKey,
 		C3.Plugins.System.Cnds.IsLoadingImages,
 		C3.Plugins.Json.Acts.SetValue,
 		C3.Plugins.Json.Exps.ToBeautifiedString,
 		C3.Plugins.System.Exps.mid,
 		C3.Plugins.AJAX.Acts.RequestFile,
-		C3.Plugins.Dictionary.Acts.AddKey,
 		C3.Plugins.AJAX.Cnds.OnComplete,
 		C3.Plugins.Json.Acts.Parse,
 		C3.Plugins.AJAX.Exps.LastData,
@@ -3899,27 +3893,37 @@ self.C3_GetObjectRefTable = function () {
 		C3.Plugins.System.Cnds.Compare,
 		C3.Plugins.Dictionary.Exps.CurrentKey,
 		C3.Plugins.Dictionary.Exps.CurrentValue,
-		C3.Plugins.AJAX.Acts.Request,
+		C3.Plugins.Sprite.Acts.LoadURL,
 		C3.Plugins.Json.Exps.GetAsBeautifiedString,
+		C3.Plugins.System.Cnds.EveryTick,
+		C3.Plugins.Touch.Exps.XAt,
+		C3.Plugins.Touch.Exps.Y,
 		C3.Plugins.System.Acts.WaitForPreviousActions,
 		C3.Plugins.Sprite.Acts.SetVisible,
+		C3.Plugins.Sprite.Acts.SetAnimFrame,
 		C3.Plugins.Text.Acts.SetFontColor,
 		C3.Plugins.Sprite.Acts.SetWidth,
 		C3.Plugins.System.Cnds.Every,
 		C3.Plugins.System.Exps.dt,
 		C3.Plugins.Sprite.Exps.Width,
 		C3.Plugins.System.Exps.loadingprogress,
-		C3.Plugins.System.Cnds.EveryTick,
 		C3.Plugins.Text.Acts.SetInstanceVar,
-		C3.Plugins.Date.Exps.Now,
 		C3.Plugins.Date.Exps.ToLocaleDateString,
 		C3.Plugins.Date.Exps.ToLocaleTimeString,
+		C3.Plugins.AJAX.Acts.Request,
 		C3.Plugins.AJAX.Cnds.OnAnyError,
 		C3.Plugins.Json.Exps.Get,
 		C3.Plugins.System.Exps.left,
-		C3.Plugins.Sprite.Acts.LoadURL,
-		C3.Plugins.Touch.Cnds.IsTouchingObject,
-		C3.Plugins.System.Acts.ResetGlobals
+		C3.Plugins.System.Cnds.ForEachOrdered,
+		C3.Plugins.Sprite.Exps.UID,
+		C3.Plugins.Sprite.Acts.Spawn,
+		C3.Plugins.System.Exps.loopindex,
+		C3.Plugins.Arr.Exps.At,
+		C3.Plugins.Arr.Acts.AddInstanceVar,
+		C3.Plugins.Text.Acts.SetAngle,
+		C3.Plugins.Sprite.Acts.SetAnimSpeed,
+		C3.Plugins.System.Acts.ResetGlobals,
+		C3.Plugins.Arr.Acts.Clear
 	];
 };
 self.C3_JsPropNameTable = [
@@ -3976,65 +3980,19 @@ self.C3_JsPropNameTable = [
 	{POSITION_IMG_dot: 0},
 	{RETRIEVE_IMG: 0},
 	{CONF_BTN_no: 0},
-	{SUCCESS_ITEM: 0},
-	{DEP_LIST_title: 0},
-	{DEP_LIST_txt: 0},
-	{LIST_BG: 0},
-	{LIST_IMG_01: 0},
-	{LIST_IMG_02: 0},
-	{LIST_IMG_03: 0},
-	{LIST_IMG_04: 0},
-	{LIST_IMG_05: 0},
-	{LIST_IMG_06: 0},
-	{LIST_IMG_07: 0},
-	{LIST_IMG_08: 0},
-	{LIST_IMG_09: 0},
-	{LIST_IMG_10: 0},
-	{LIST_NO_01: 0},
-	{LIST_NO_02: 0},
-	{LIST_NO_03: 0},
-	{LIST_NO_04: 0},
-	{LIST_NO_05: 0},
-	{LIST_NO_06: 0},
-	{LIST_NO_07: 0},
-	{LIST_NO_08: 0},
-	{LIST_NO_09: 0},
-	{LIST_NO_10: 0},
-	{LIST_TXT_dep_01: 0},
-	{LIST_TXT_dep_02: 0},
-	{LIST_TXT_dep_03: 0},
-	{LIST_TXT_dep_04: 0},
-	{LIST_TXT_dep_05: 0},
-	{LIST_TXT_dep_06: 0},
-	{LIST_TXT_dep_07: 0},
-	{LIST_TXT_dep_08: 0},
-	{LIST_TXT_dep_09: 0},
-	{LIST_TXT_dep_10: 0},
-	{LIST_TXT_type_01: 0},
-	{LIST_TXT_type_10: 0},
-	{LIST_TXT_type_02: 0},
-	{LIST_TXT_type_03: 0},
-	{LIST_TXT_type_04: 0},
-	{LIST_TXT_type_05: 0},
-	{LIST_TXT_type_06: 0},
-	{LIST_TXT_type_07: 0},
-	{LIST_TXT_type_08: 0},
-	{LIST_TXT_type_09: 0},
-	{DEP_LIST_BOX: 0},
-	{DEP_LIST_scroll: 0},
 	{ICON_COIN: 0},
 	{STEP_4: 0},
 	{DEP_BTN_no: 0},
 	{DEP_BTN_yes: 0},
 	{CLOSE_IMG: 0},
+	{LIST_MASK: 0},
 	{Dictionary: 0},
 	{JSON: 0},
 	{LocalStorage: 0},
 	{AJAX: 0},
 	{Browser: 0},
 	{Touch: 0},
-	{QR_READ: 0},
-	{QR_RESULT: 0},
+	{total_deposit: 0},
 	{Array: 0},
 	{ERROR: 0},
 	{ERR_btn: 0},
@@ -4042,16 +4000,24 @@ self.C3_JsPropNameTable = [
 	{test_btn: 0},
 	{Test_Text: 0},
 	{Date: 0},
+	{DragDrop: 0},
 	{test_Sprite: 0},
-	{STATE: 0},
-	{LIST_MASK: 0},
+	{test_box: 0},
+	{index: 0},
+	{DEPOSIT_CUP: 0},
+	{DEPOSIT_PRICE: 0},
+	{DICT_LOG: 0},
+	{TEST_DICT: 0},
+	{STEP_5: 0},
+	{Select_Bank: 0},
+	{Bank_Txt: 0},
+	{Input_Account: 0},
+	{ACC_Txt: 0},
+	{NUM_0: 0},
+	{NUM_1: 0},
+	{NUM_2: 0},
+	{NUM_CONF: 0},
 	{IMG_FAM: 0},
-	{Pin: 0},
-	{LIST_NO: 0},
-	{LIST_IMG: 0},
-	{LIST_TYPE: 0},
-	{LIST_DEP: 0},
-	{DEPOSIT: 0},
 	{test: 0},
 	{test2: 0},
 	{CNT: 0},
@@ -4060,6 +4026,7 @@ self.C3_JsPropNameTable = [
 	{str3: 0},
 	{STORE: 0},
 	{PROGRESS: 0},
+	{STATE: 0},
 	{STEP: 0},
 	{PROCESS: 0},
 	{SUCCESS: 0},
@@ -4074,12 +4041,14 @@ self.C3_JsPropNameTable = [
 	{scan_in: 0},
 	{qr_label: 0},
 	{qr_result: 0},
+	{DEPOSIT: 0},
 	{VAL_1: 0},
 	{VAL_2: 0},
 	{VAL_3: 0},
 	{RE_REC: 0},
 	{CLASS: 0},
-	{DEP_TOTAL: 0}
+	{DEP_TOTAL: 0},
+	{test_loop: 0}
 ];
 }
 
@@ -4233,13 +4202,22 @@ self.C3_ExpressionFuncs = [
 		},
 		p => {
 			const v0 = p._GetNode(0).GetVar();
-			return () => (and("QR(", v0.GetValue()) + ")");
+			return () => (v0.GetValue() - 1);
+		},
+		p => {
+			const f0 = p._GetNode(0).GetBoundMethod();
+			const f1 = p._GetNode(1).GetBoundMethod();
+			return () => f0(f1());
 		},
 		p => {
 			const v0 = p._GetNode(0).GetVar();
 			return () => v0.GetValue();
 		},
-		() => "RETRIEVE",
+		p => {
+			const v0 = p._GetNode(0).GetVar();
+			const v1 = p._GetNode(1).GetVar();
+			return () => and((v0.GetValue() + " / "), v1.GetValue());
+		},
 		() => 1.5,
 		() => "DOOR_OPEN",
 		() => -4,
@@ -4273,12 +4251,7 @@ self.C3_ExpressionFuncs = [
 			return () => n0.ExpObject("S10201");
 		},
 		() => "B20101",
-		() => "FWD",
-		p => {
-			const v0 = p._GetNode(0).GetVar();
-			const v1 = p._GetNode(1).GetVar();
-			return () => ((("http://localhost:8000/MOTOR_MOVE/?ACT=" + v0.GetValue()) + "&NUM=") + v1.GetValue());
-		},
+		() => "http://localhost:8000/img/test01.jpg",
 		() => "OPENING_CHK",
 		p => {
 			const f0 = p._GetNode(0).GetBoundMethod();
@@ -4288,10 +4261,15 @@ self.C3_ExpressionFuncs = [
 			const n0 = p._GetNode(0);
 			return () => n0.ExpObject("RESULT");
 		},
+		p => {
+			const f0 = p._GetNode(0).GetBoundMethod();
+			return () => f0(0);
+		},
 		() => "FUNC_REC",
 		() => "POSITION",
 		() => "RECOGNITION",
 		() => "CONFIRM",
+		() => "RETRIEVE",
 		() => "ADD",
 		() => 1023,
 		() => 1223,
@@ -4306,6 +4284,7 @@ self.C3_ExpressionFuncs = [
 		},
 		() => "RECOGNIZED",
 		() => "COMPARED",
+		() => "FWD",
 		() => "FWDED",
 		() => "RET_STOP",
 		() => "RET_STOPED",
@@ -4335,7 +4314,7 @@ self.C3_ExpressionFuncs = [
 			return () => (and("Drimm 용기인식이 [b]", v0.GetValue()) + "번\n오류[/b]가 확인되었습니다.\n[b]다시 처음부터 시작합니다.[/b]");
 		},
 		() => "RECOG_DONE",
-		() => "Loading...\nECIS_22_V1.7",
+		() => "Loading...\nECIS_22_V1.8",
 		() => 900,
 		p => {
 			const f0 = p._GetNode(0).GetBoundMethod();
@@ -4384,12 +4363,21 @@ self.C3_ExpressionFuncs = [
 			return () => ("http://localhost:8000/QR_CHK/" + v0.GetValue());
 		},
 		p => {
+			const n0 = p._GetNode(0);
+			return () => n0.ExpObject("DEPOSIT");
+		},
+		p => {
 			const f0 = p._GetNode(0).GetBoundMethod();
 			const v1 = p._GetNode(1).GetVar();
 			return () => f0(v1.GetValue(), 3, 6);
 		},
 		() => "http://localhost:8000/QR_END",
 		() => "DOOR / LED",
+		p => {
+			const v0 = p._GetNode(0).GetVar();
+			const v1 = p._GetNode(1).GetVar();
+			return () => ((("http://localhost:8000/MOTOR_MOVE/?ACT=" + v0.GetValue()) + "&NUM=") + v1.GetValue());
+		},
 		() => "OPENING",
 		() => "IN",
 		p => {
@@ -4418,10 +4406,6 @@ self.C3_ExpressionFuncs = [
 			const v1 = p._GetNode(1).GetVar();
 			return () => f0(v1.GetValue(), 4);
 		},
-		p => {
-			const v0 = p._GetNode(0).GetVar();
-			return () => (and("class", v0.GetValue()) + ".jpg");
-		},
 		() => "RETREIVE",
 		() => "FWDING",
 		() => "BAC",
@@ -4432,6 +4416,22 @@ self.C3_ExpressionFuncs = [
 		() => "BANKING",
 		() => "DOOR_CLOSE",
 		() => "BANK_PROCESS",
+		() => 5000,
+		p => {
+			const n0 = p._GetNode(0);
+			const f1 = p._GetNode(1).GetBoundMethod();
+			return () => n0.ExpObject(f1(), 2);
+		},
+		p => {
+			const n0 = p._GetNode(0);
+			const f1 = p._GetNode(1).GetBoundMethod();
+			return () => n0.ExpObject(f1(), 3);
+		},
+		() => 345,
+		p => {
+			const n0 = p._GetNode(0);
+			return () => (and("보증금 환불총액은\n[b]", n0.ExpInstVar()) + "원[/b]입니다.");
+		},
 		() => "DEP_BTN_yes"
 ];
 
